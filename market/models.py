@@ -18,9 +18,6 @@ class SubCategory(models.Model):
     img = models.ImageField(upload_to=f"images%y%m%d")
     categoty_id = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="subcategories")
     
-    def get_absolute_url(self):
-        return reverse("categories", kwargs={'slug':self.slug})
-    
     def __str__(self):
         return self.title
     

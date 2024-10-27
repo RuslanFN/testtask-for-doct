@@ -5,6 +5,5 @@ from django.http import HttpResponse
 # Create your views here.
 
 def categories(request):
-    for image in ImageProduct.objects.all():
-        print(image.get_absolute_url())
-    return HttpResponse(str(Category.objects.all()  ))
+    Category.objects.all()
+    return 
