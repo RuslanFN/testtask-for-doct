@@ -1,0 +1,27 @@
+{% extends "market/template.html" %}
+{% load static %}
+{% block title %} {{title}} {% endblock %}
+{% block links %}
+    <link rel="stylesheet" href="{% static "market/css/products.css"%}"/>
+    <script src="{% static "market/scripts/products.js" %}"></script>
+{% endblock %}
+{% block main %}
+     <section id="products">
+        {% for product in products %}
+            <div class="product">
+                <div class="product-images">
+                    <img id="mainImage1" src="{{product.images.first.get_absolute_url}}" alt="{{product.slug}}">
+            </div>
+            <div class="thumbnails">
+                {% for image in product.images.all%}
+                    <img src="{{image.get_absolute_url}}" alt="{{product.slug}}" onclick="changeImage('mainImage1', this.src)">
+                {% endfor %}  
+            </div>
+                
+            <h3>{{product.title}}</h3>
+            <p>{{product.price}}</p>
+            <button>Добавить в корзину</button>
+        </div>
+        {% endfor %}    
+    </section>
+{% endblock %}

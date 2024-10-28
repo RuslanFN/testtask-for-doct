@@ -1,0 +1,27 @@
+{% extends "market/template.html" %}
+{% load static %}
+{% block title %} {{title}} {% endblock %}
+{% block links %}
+    <link rel="stylesheet" href="{% static "market/css/categories.css"%}"/>
+{% endblock %}
+{% block main %}
+
+    <section id="hero">
+            <h1>Добро пожаловать в наш интернет-магазин!</h1>
+            <p>Лучшие товары по лучшим ценам!</p>
+        </section>
+    <section id="categories">
+            <h2>Категории</h2>
+            <ul>
+                {% for category in categories %}
+                    <li><a href="#category1">{{category.title}}</a>
+                        <ul>
+                            {% for subcategory in category.subcategories.all %}
+                                <li><a href="{{subcategory.get_absolute_url}}">{{subcategory.title}}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+{% endblock %}

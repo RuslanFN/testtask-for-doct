@@ -18,10 +18,11 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static 
-from market.views import categories
+from market.views import categories, products_by_subcategory
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('categories', categories)
+    path('categories', categories, name='categories'),
+    path('products/<slug:category>/<slug:subcategory>', products_by_subcategory, name='products')
 ]
 
 if settings.DEBUG:
