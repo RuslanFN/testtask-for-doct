@@ -1,5 +1,5 @@
 from django.contrib import admin
-from market.models import Product, ImageProduct, Category, SubCategory
+from market.models import Product, ImageProduct, Category, SubCategory, Cart, CartItem
 # Register your models here.
 
 class ImageProductInline(admin.StackedInline):
@@ -19,3 +19,5 @@ class SubCategoryAdmin(admin.ModelAdmin):
 admin.site.register(Product, ProductAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(SubCategory, SubCategoryAdmin)
+admin.site.register(Cart)
+admin.site.register(CartItem)

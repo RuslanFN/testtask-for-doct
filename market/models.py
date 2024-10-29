@@ -1,5 +1,6 @@
 from django.db import models
 from django.shortcuts import reverse
+from django.contrib.auth.models import User
 # Create your models here.
 
 def validate_price(value):
@@ -48,4 +49,31 @@ class ImageProduct(models.Model):
     def get_absolute_url(self):
         return self.img.url
 
+class Cart(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='Cart')
+    
+    @property
+    def count(self):
+        return len(self.CartItem.objects.all())
 
+    @property
+    def amount(self):
+        return sum((item.amount for item in self.CartItem.objects.all()))
+
+    def __str__(self):
+        return f'{self.user.username} {self.amount} {self.count}'
+
+class CartItem(models.Model):
+    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
+    count = models.IntegerField(default=0)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='CartItem')
+
+    def __str__(self):
+        return f"{self.product_id.title} {count}"
+    @property
+    def amount(self):
+        return self.product_id.price * count
+
+
+
+   

@@ -18,10 +18,11 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static 
-from market.views import categories, products_by_subcategory, login
+from market.views import categories, products_by_subcategory, login_user, logout_user
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', login, name='login'),
+    path('login/', login_user, name='login'),
+    path('logout/', logout_user, name='logout'),
     path('categories', categories, name='categories'),
     path('products/<slug:category>/<slug:subcategory>', products_by_subcategory, name='products')
 ]
