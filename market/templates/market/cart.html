@@ -2,4 +2,47 @@
 {% load static %}
 {% block title %} {{title}} {% endblock %}
 {% block main %}
+    <h1>Корзина</h1>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Название товара</th>
+                    <th>Количество</th>
+                    <th>Цена (руб.)</th>
+                    <th>Итоговая цена (руб.)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart %}
+                <tr>
+                    <td>{{ item.title }}</td>
+                    <td>{{ item.count }}</td>
+                    <td>{{ item.product_id.price }}</td>
+                    <td>{{ item.amount }}</td>
+                    <td>
+                        <form action="{% url "removeitemcart" product_slug=item.product_id.slug %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit">Удалить</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="{% url "addtocart" product_slug=item.product_id.slug %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit">Добавить</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="{% url "reduscetocart" product_slug=item.product_id.slug %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit">Убрать</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">Корзина пуста</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 {% endblock %}

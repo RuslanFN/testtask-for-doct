@@ -15,7 +15,9 @@
             <ul>
                 <li><a href="#home">Главная</a></li>
                 <li><a href="{% url "categories"%}">Категории</a></li>
-                <li><a href="#about">О нас</a></li>
+                {% if request.user.is_authenticated %}
+                <li><a href="{% url "cart"%}">Корзина</a></li>
+                {% endif %}
                 {% if request.user.is_authenticated %}
                     <li><a href="{% url "logout"%}">Выйти</a></li>
                 {% else%}

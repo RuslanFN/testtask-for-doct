@@ -54,25 +54,25 @@ class Cart(models.Model):
     
     @property
     def count(self):
-        return len(self.CartItem.objects.all())
+        return len(self.CartItem.all())
 
     @property
     def amount(self):
-        return sum((item.amount for item in self.CartItem.objects.all()))
+        return sum((item.amount for item in self.CartItem.all()))
 
     def __str__(self):
-        return f'{self.user.username} {self.amount} {self.count}'
+       return f'{self.user.username} {self.amount} {self.count}'
 
 class CartItem(models.Model):
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
-    count = models.IntegerField(default=0)
+    count = models.IntegerField(default=1)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='CartItem')
 
     def __str__(self):
-        return f"{self.product_id.title} {count}"
+        return f"{self.product_id.title} {self.count}"
     @property
     def amount(self):
-        return self.product_id.price * count
+        return self.product_id.price * self.count
 
 
 

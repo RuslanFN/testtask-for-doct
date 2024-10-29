@@ -18,8 +18,12 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static 
-from market.views import categories, products_by_subcategory, login_user, logout_user
+from market.views import categories, products_by_subcategory, login_user, logout_user, get_cart, remove_item_cart, add_to_cart, redusce_to_cart
 urlpatterns = [
+    path('removeitemcart/<slug:product_slug>', remove_item_cart, name='removeitemcart'),
+    path('addtocart/<slug:product_slug>', add_to_cart, name='addtocart'),
+    path('reduscetocart/<slug:product_slug>', redusce_to_cart, name='reduscetocart'),
+    path('cart/', get_cart, name='cart'),
     path('admin/', admin.site.urls),
     path('login/', login_user, name='login'),
     path('logout/', logout_user, name='logout'),

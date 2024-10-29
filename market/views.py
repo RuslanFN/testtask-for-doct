@@ -15,7 +15,6 @@ def logout_user(request):
     return HttpResponse(status=404)
 
 def categories(request):
-    get_cart(request)
     objects = Category.objects.all()
     return render(request, 'market/categories.html', {'title':'Категории', 'categories':objects})
 
@@ -42,4 +41,34 @@ def login_user(request):
 def get_cart(request):
     if request.user.is_authenticated:
         cart = Cart.objects.get_or_create(user=request.user)
-        
+        return render(request, 'market/cart.html', {'cart':request.user.Cart.CartItem.all()})
+    else:
+        return HttpResponse(status=404)
+    
+def remove_item_cart(request, product_slug):
+    if request.user.is_authenticated:
+        request.user.Cart.CartItem.get(product_id__slug=product_slug).delete()
+        return redirect('/cart')
+    else:
+        return HttpResponse(status=404)
+def add_to_cart(request, product_slug):
+    if request.user.is_authenticated:
+        item = request.user.Cart.CartItem.filter(product_id__slug = product_slug)
+        if item.exists():
+            count = item.first().count
+            print(item.update(count=count+1))
+        else:
+            CartItem.objects.create(cart=request.user.Cart, product_id = Product.objects.get(slug=product_slug))
+        return redirect(request.META.get('HTTP_REFERER'))
+    else:
+        return HttpResponse(status=404)
+def redusce_to_cart(request, product_slug):
+    if request.user.is_authenticated:
+        item = request.user.Cart.CartItem.filter(product_id__slug = product_slug)
+        count = item.first().count
+        if count > 1:
+            item.update(count=count-1)  
+        return redirect('/cart')
+    else:
+        return HttpResponse(status=404)
+

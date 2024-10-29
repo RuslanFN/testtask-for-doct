@@ -20,7 +20,10 @@
                 
             <h3>{{product.title}}</h3>
             <p>{{product.price}}</p>
-            <button>Добавить в корзину</button>
+            <form action="{% url "addtocart" product_slug=product.slug %}" method="post">
+                {% csrf_token %}
+                <button type="submit">Добавить в корзину</button>
+            </form>
         </div>
         {% endfor %}    
     </section>
