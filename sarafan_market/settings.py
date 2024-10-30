@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'market'
+    'api_market.apps.ApiMarketConfig',
+    'market',
+    #'api_market',
 ]
 
 MIDDLEWARE = [
