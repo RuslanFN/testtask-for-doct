@@ -11,3 +11,11 @@ def get_categories(request):
         serializer  = serializers.CategorySerializer(categories, many=True)
         return Response(serializer.data)
 
+
+@api_view(['GET', 'POST'])
+def get_products(request):
+    if request.method == 'GET':
+        products = models.Product.objects.all()
+        serializer  = serializers.ProductsSerializer(products, many=True)
+        return Response(serializer.data)
+
