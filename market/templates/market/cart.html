@@ -15,7 +15,7 @@
             <tbody>
                 {% for item in cart %}
                 <tr>
-                    <td>{{ item.title }}</td>
+                    <td>{{ item.product_id.title }}</td>
                     <td>{{ item.count }}</td>
                     <td>{{ item.product_id.price }}</td>
                     <td>{{ item.amount }}</td>
