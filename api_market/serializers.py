@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from market import models
+from django.db.models import F
+from rest_framework.response import Response
 class CategoryOnlySerializer(serializers.ModelSerializer):
     title = serializers.CharField(read_only=True)
     slug = serializers.SlugField(read_only=True)
@@ -76,28 +78,46 @@ class ProductForCartUpdateSerializer(serializers.ModelSerializer):
         fields = ['slug']
 
 class CartItemForUpdate(serializers.ModelSerializer):
-    product_id = ProductForCartUpdateSerializer(read_only=True)
-    count = serializers.IntegerField()
+    product_id = ProductForCartUpdateSerializer()
+    count = serializers.IntegerField(default=1)
     class Meta:
         model = models.CartItem
         fields = ['product_id', 'count']
-    def create(self, **validated_data):
-        slug = validated_data['product_id']['slug']
-        product = models.Product.objects.get(slug=slug) 
-        models.CartItem.objects.create(cart=self.instance, product_id=product, count = int(validated_data['count']))
+
+
+
 
 class CartItemSerializer(serializers.ModelSerializer):
     product_id = ProductsForCartSerializer()
-    count = serializers.IntegerField(read_only=True)     
-    #amount = serializers.SerializerMethodField()
+    count = serializers.IntegerField()     
     class Meta:
         model = models.CartItem
         fields = ['product_id', 'count', 'amount']
 
 class CartSerializer(serializers.ModelSerializer):
-    CartItem = CartItemSerializer(many=True)
+    CartItem = CartItemSerializer(many=True, read_only=True)
     class Meta:
         model = models.Cart
         fields = ['CartItem']
+
+class CartForUpdateSerializer(serializers.ModelSerializer):
+    CartItem = CartItemForUpdate(many=False, write_only=True)
+    class Meta:
+        model = models.Cart
+        fields = ['CartItem']
+
+    def update(self, instance, validated_data):
+        print(validated_data)
+        slug = validated_data.get('CartItem').get('product_id').get('slug')
+        try: 
+            product = models.Product.objects.get(slug=slug)
+        except:
+            raise ValueError(f'{slug} не найден')
+        cart_item, _ = models.CartItem.objects.get_or_create(cart=instance, product_id=product)
+        count = validated_data.get('CartItem').get('count')
+        cart_item.count = count
+        cart_item.save()    
+        return instance
+
 
 

@@ -5,6 +5,7 @@ from market.models import Category, ImageProduct, Product, SubCategory, Cart, Ca
 from json import dumps
 from django.http import HttpResponse
 from rest_framework.authtoken.models import Token
+from django.db.models import F
 # Create your views here.
 
 def logout_user(request):
@@ -53,12 +54,13 @@ def remove_item_cart(request, product_slug):
         return HttpResponse(status=404)
 def add_to_cart(request, product_slug):
     if request.user.is_authenticated:
-        item = request.user.Cart.CartItem.filter(product_id__slug = product_slug)
+        cart, _ = Cart.objects.get_or_create(user=request.user)
+        print(cart)
+        item = cart.CartItem.filter(product_id__slug = product_slug)
         if item.exists():
-            count = item.first().count
-            print(item.update(count=count+1))
+            print(item.update(count=F('count')+1))
         else:
-            CartItem.objects.create(cart=request.user.Cart, product_id = Product.objects.get(slug=product_slug))
+            CartItem.objects.create(cart=cart, product_id = Product.objects.get(slug=product_slug))
         return redirect(request.META.get('HTTP_REFERER'))
     else:
         return HttpResponse(status=404)

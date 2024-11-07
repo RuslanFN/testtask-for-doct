@@ -24,6 +24,8 @@ from market.views import categories, products_by_subcategory, login_user, logout
 urlpatterns = [
     path('api/token/', ObtainAuthToken.as_view(), name='token'),
     path('api/cart/', views.get_cart),
+    path('api/cart/add/', views.add_to_cart),
+    path('api/cart/remove/<slug:slug>/', views.remove_item_cart),
     path('api/products/', views.get_products),
     path('api/categories/', views.get_categories),
     path('removeitemcart/<slug:product_slug>', remove_item_cart, name='removeitemcart'),
