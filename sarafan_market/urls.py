@@ -21,11 +21,15 @@ from django.conf import settings
 from django.conf.urls.static import static 
 from rest_framework.authtoken.views import ObtainAuthToken
 from market.views import categories, products_by_subcategory, login_user, logout_user, get_cart, remove_item_cart, add_to_cart, redusce_to_cart
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView   
 urlpatterns = [
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='docs'),
     path('api/token/', ObtainAuthToken.as_view(), name='token'),
     path('api/cart/', views.get_cart),
     path('api/cart/add/', views.add_to_cart),
     path('api/cart/remove/<slug:slug>/', views.remove_item_cart),
+    path('api/cart/clear/', views.clear_cart),
     path('api/products/', views.get_products),
     path('api/categories/', views.get_categories),
     path('removeitemcart/<slug:product_slug>', remove_item_cart, name='removeitemcart'),

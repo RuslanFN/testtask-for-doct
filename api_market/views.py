@@ -8,15 +8,18 @@ from market import models
 from rest_framework.pagination import PageNumberPagination
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
-@api_view(['GET', 'POST'])
+
+@api_view(['GET'])
 def get_categories(request):
     if request.method == 'GET':
         categories = models.Category.objects.all()
         serializer  = serializers.CategoryFullSerializer(categories, many=True)
         return Response(serializer.data)
+    else:
+        return Response(status=404)
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def get_products(request):
     paginator = PageNumberPagination()
     paginator.page_size = 2
@@ -25,12 +28,19 @@ def get_products(request):
         page=paginator.paginate_queryset(products, request)
         serializer  = serializers.ProductsSerializer(page, many=True)
         return Response(serializer.data)
+    else:
+        return Response(status=404)
+
 @api_view(['GET'])
 def get_cart(request):
     if request.method == "GET":
         if IsAuthenticated:
             serializer = serializers.CartSerializer(request.user.Cart)
             return Response(serializer.data)
+        else:
+            return Response(status=401)
+    else:
+        return Response(status=404)
 
 @api_view(['POST'])
 def add_to_cart(request):
@@ -43,6 +53,10 @@ def add_to_cart(request):
                 return Response({'post': serializer.data})
             else:
                 return Response('Неверные данные', 400)
+        else:
+            return Response(status=401)
+    else:
+        return Response(status=404)
 
 
 @api_view(['DELETE'])
@@ -52,4 +66,19 @@ def remove_item_cart(request, slug):
             cart_item = generics.get_object_or_404(request.user.Cart.CartItem, product_id__slug=slug)
             cart_item.delete()
             return Response(status=204)
-        
+        else:
+            return Response(status=401)
+    else:
+        return Response(status=404)
+
+@api_view(['DELETE'])
+def clear_cart(request):
+    if request.method == "DELETE":
+        if IsAuthenticated:
+            cart_items = request.user.Cart.CartItem.all()
+            cart_items.delete()
+            return Response(status=204)
+        else:
+            return Response(status=401)
+    else:
+        return Response(status=404)
